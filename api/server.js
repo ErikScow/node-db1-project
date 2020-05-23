@@ -9,7 +9,6 @@ server.use(express.json());
 //Request handlers:
 
 server.post('/api/accounts', validateAccount, (req, res) => {
-    console.log(req.body)
     db('accounts').insert(req.body)
     .then( accountId => {
         res.status(201).json(accountId)
@@ -28,6 +27,20 @@ server.get('/api/accounts', (req, res) => {
         .catch(error => {
             res.status(500).json({ message: 'Failed to get accounts'})
         })
+})
+
+server.delete('/api/accounts/:id', validateId, ( req, res) => {
+    db('accounts').where({ id: req.params.id }).del()
+    .then(() => res.status(200).json({ message: 'deleted successfully'}))
+    .catch((err) => {
+        res.status(500).json({ message: 'Failed to delete account'})
+    })
+})
+
+server.put('/api/accounts/:id', validateAccount, (req, res) => {
+    db('accounts').where({ id: req.params.id}).update(req.body)
+    .then(() => res.status(200).json({ message: 'successfully updated'}))
+    .catch((err) => res.status(500).json({ message: 'could not update to database'}))
 })
 
 //Middlewares:
