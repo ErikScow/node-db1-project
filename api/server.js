@@ -30,7 +30,7 @@ server.get('/api/accounts', (req, res) => {
         })
 })
 
-server.delete('/api/accounts/:id', (req, res) => {
+server.delete('/api/accounts/:id', validateId, (req, res) => {
     db('accounts').where( { id: req.params.id}).del()
         .then(() => res.status(200).json({message: 'successfully deleted'}))
         .catch(err => {
@@ -58,10 +58,9 @@ function validateAccount(req, res, next){
 }
 
 function validateId(req, res, next){
-    const { id } = req.params.id
-    db('accounts').where( {id})
-        .then( account => {
-            if(account){
+    db('accounts').where( {id: req.params.id} )
+        .then(account => {
+            if(account.length > 0){
                 req.account = account
                 next()
             } else {
