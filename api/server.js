@@ -39,8 +39,15 @@ server.delete('/api/accounts/:id', validateId, (req, res) => {
         })
 })
 
-server.put('/api/accounts/id', (req, res) => {
-    
+server.put('/api/accounts/:id', (req, res) => {
+    db('accounts').where({ id: req.params.id }).update(req.body)
+        .then(() => {
+            res.status(200).json({message: 'successfully updated'})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({message: 'could not update to database'})
+        })
 })
 
 //middleware
