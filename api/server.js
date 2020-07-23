@@ -8,13 +8,35 @@ server.use(express.json());
 
 //handlers
 
-server.post()
+server.post('/api/accounts', validateAccount, (req, res) => {
+    db('accounts').insert(req.body)
+        .then(accountId => {
+            res.status(201).json(accountId)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({message: 'failed to post to database'})
+        })
+})
 
-server.get()
+server.get('/api/accounts', (req, res) => {
+    db('accounts')
+        .then(accounts => {
+            res.status(200).json(accounts)
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({message: 'falied to get accounts'})
+        })
+})
 
-server.delete()
+server.delete('/api/accounts/:id', (req, res) => {
+    
+})
 
-server.put()
+server.put('/api/accounts/id', (req, res) => {
+    
+})
 
 //middleware
 
