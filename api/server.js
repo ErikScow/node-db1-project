@@ -31,7 +31,12 @@ server.get('/api/accounts', (req, res) => {
 })
 
 server.delete('/api/accounts/:id', (req, res) => {
-    
+    db('accounts').where( { id: req.params.id}).del()
+        .then(() => res.status(200).json({message: 'successfully deleted'}))
+        .catch(err => {
+            console.log(err)
+            res.status(500).json({message: 'could not delete from database'})
+        })
 })
 
 server.put('/api/accounts/id', (req, res) => {
